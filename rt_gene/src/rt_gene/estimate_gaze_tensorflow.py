@@ -4,8 +4,8 @@ import numpy as np
 import tensorflow as tf
 from tqdm import tqdm
 
-from rt_gene.estimate_gaze_base import GazeEstimatorBase
 from rt_gene.download_tools import download_gaze_tensorflow_models
+from rt_gene.estimate_gaze_base import GazeEstimatorBase
 
 
 class GazeEstimator(GazeEstimatorBase):
@@ -43,7 +43,8 @@ class GazeEstimator(GazeEstimatorBase):
         elif len(models) > 1:
             tensors = [model([img_input_l, img_input_r, headpose_input]) for model in models]
             output_layer = tf.keras.layers.average(tensors)
-            self.ensemble_model = tf.keras.Model(inputs=[img_input_l, img_input_r, headpose_input], outputs=output_layer)
+            self.ensemble_model = tf.keras.Model(inputs=[img_input_l, img_input_r, headpose_input],
+                                                 outputs=output_layer)
         else:
             raise ValueError("No models were loaded")
         # noinspection PyProtectedMember

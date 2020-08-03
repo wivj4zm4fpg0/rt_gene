@@ -7,20 +7,20 @@ import torchvision.transforms as transforms
 from torch.backends import cudnn as cudnn
 from tqdm import tqdm
 
-from rt_gene.download_tools import download_external_landmark_models
-
 # noinspection PyUnresolvedReferences
 from rt_gene import gaze_tools as gaze_tools
 from rt_gene.SFD.sfd_detector import SFDDetector
 from rt_gene.ThreeDDFA.ddfa import ToTensorGjz, NormalizeGjz
 from rt_gene.ThreeDDFA.inference import crop_img, predict_68pts, parse_roi_box_from_bbox, parse_roi_box_from_landmark
+from rt_gene.download_tools import download_external_landmark_models
 from rt_gene.tracker_generic import TrackedSubject
 
 facial_landmark_transform = transforms.Compose([ToTensorGjz(), NormalizeGjz(mean=127.5, std=128)])
 
 
 class LandmarkMethodBase(object):
-    def __init__(self, device_id_facedetection, checkpoint_path_face=None, checkpoint_path_landmark=None, model_points_file=None):
+    def __init__(self, device_id_facedetection, checkpoint_path_face=None, checkpoint_path_landmark=None,
+                 model_points_file=None):
         download_external_landmark_models()
         self.model_size_rescale = 16.0
         self.head_pitch = 0.0
@@ -106,7 +106,9 @@ class LandmarkMethodBase(object):
 
         endpoint_x, endpoint_y = gaze_tools.get_endpoint(est_headpose[1], est_headpose[0], center_x, center_y, 100)
 
-        cv2.line(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 0, 255), 3)
+        # cv2.line(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 0, 255), 3)
+        cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 0, 255),
+                        3)
         return output_image
 
     def ddfa_forward_pass(self, color_img, roi_box_list):

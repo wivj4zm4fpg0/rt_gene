@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Licensed under Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode)
 
 from __future__ import print_function, division, absolute_import
@@ -90,7 +88,8 @@ def estimate_gaze(base_name, color_img, dist_coefficients, camera_matrix):
             plt.show()
 
         if args.save_headpose:
-            cv2.imwrite(os.path.join(args.output_path, os.path.splitext(base_name)[0] + '_headpose.jpg'), head_pose_image)
+            cv2.imwrite(os.path.join(args.output_path, os.path.splitext(base_name)[0] + '_headpose.jpg'),
+                        head_pose_image)
 
         input_r_list.append(gaze_estimator.input_from_image(subject.right_eye_color))
         input_l_list.append(gaze_estimator.input_from_image(subject.left_eye_color))
@@ -133,20 +132,27 @@ if __name__ == '__main__':
                         nargs='?', help='Path to an image or a directory containing images')
     parser.add_argument('--calib-file', type=str, dest='calib_file', default=None, help='Camera calibration file')
     parser.add_argument('--vis-headpose', dest='vis_headpose', action='store_true', help='Display the head pose images')
-    parser.add_argument('--no-vis-headpose', dest='vis_headpose', action='store_false', help='Do not display the head pose images')
+    parser.add_argument('--no-vis-headpose', dest='vis_headpose', action='store_false',
+                        help='Do not display the head pose images')
     parser.add_argument('--save-headpose', dest='save_headpose', action='store_true', help='Save the head pose images')
-    parser.add_argument('--no-save-headpose', dest='save_headpose', action='store_false', help='Do not save the head pose images')
+    parser.add_argument('--no-save-headpose', dest='save_headpose', action='store_false',
+                        help='Do not save the head pose images')
     parser.add_argument('--vis-gaze', dest='vis_gaze', action='store_true', help='Display the gaze images')
     parser.add_argument('--no-vis-gaze', dest='vis_gaze', action='store_false', help='Do not display the gaze images')
     parser.add_argument('--save-gaze', dest='save_gaze', action='store_true', help='Save the gaze images')
-    parser.add_argument('--save-estimate', dest='save_estimate', action='store_true', help='Save the predictions in a text file')
+    parser.add_argument('--save-estimate', dest='save_estimate', action='store_true',
+                        help='Save the predictions in a text file')
     parser.add_argument('--no-save-gaze', dest='save_gaze', action='store_false', help='Do not save the gaze images')
     parser.add_argument('--gaze_backend', choices=['tensorflow', 'pytorch'], default='tensorflow')
-    parser.add_argument('--output_path', type=str, default=os.path.abspath(os.path.join(script_path, './samples_gaze/out')),
+    parser.add_argument('--output_path', type=str,
+                        default=os.path.abspath(os.path.join(script_path, './samples_gaze/out')),
                         help='Output directory for head pose and gaze images')
-    parser.add_argument('--models', nargs='+', type=str, default=[os.path.abspath(os.path.join(script_path, '../rt_gene/model_nets/Model_allsubjects1.h5'))],
-                        help='List of gaze estimators')
-    parser.add_argument('--device-id-facedetection', dest="device_id_facedetection", type=str, default='cuda:0', help='Pytorch device id. Set to "cpu:0" to disable cuda')
+    parser.add_argument(
+        '--models', nargs='+', type=str,
+        default=[os.path.abspath(os.path.join(script_path, '../rt_gene/model_nets/Model_allsubjects1.h5'))],
+        help='List of gaze estimators')
+    parser.add_argument('--device-id-facedetection', dest="device_id_facedetection", type=str, default='cuda:0',
+                        help='Pytorch device id. Set to "cpu:0" to disable cuda')
 
     parser.set_defaults(vis_gaze=True)
     parser.set_defaults(save_gaze=True)
@@ -170,11 +176,14 @@ if __name__ == '__main__':
         sys.exit(1)
 
     tqdm.write('Loading networks')
-    landmark_estimator = LandmarkMethodBase(device_id_facedetection=args.device_id_facedetection,
-                                            checkpoint_path_face=os.path.abspath(os.path.join(script_path, "../rt_gene/model_nets/SFD/s3fd_facedetector.pth")),
-                                            checkpoint_path_landmark=os.path.abspath(
-                                                os.path.join(script_path, "../rt_gene/model_nets/phase1_wpdc_vdc.pth.tar")),
-                                            model_points_file=os.path.abspath(os.path.join(script_path, "../rt_gene/model_nets/face_model_68.txt")))
+    landmark_estimator = LandmarkMethodBase(
+        device_id_facedetection=args.device_id_facedetection,
+        checkpoint_path_face=os.path.abspath(
+            os.path.join(script_path, "../rt_gene/model_nets/SFD/s3fd_facedetector.pth")),
+        checkpoint_path_landmark=os.path.abspath(
+            os.path.join(script_path, "../rt_gene/model_nets/phase1_wpdc_vdc.pth.tar")),
+        model_points_file=os.path.abspath(os.path.join(script_path, "../rt_gene/model_nets/face_model_68.txt"))
+    )
 
     if args.gaze_backend == "tensorflow":
         from rt_gene.estimate_gaze_tensorflow import GazeEstimator
@@ -201,8 +210,14 @@ if __name__ == '__main__':
             _dist_coefficients, _camera_matrix = load_camera_calibration(args.calib_file)
         else:
             im_width, im_height = image.shape[1], image.shape[0]
-            tqdm.write('WARNING!!! You should provide the camera calibration file, otherwise you might get bad results. Using a crude approximation!')
-            _dist_coefficients, _camera_matrix = np.zeros((1, 5)), np.array(
-                [[im_height, 0.0, im_width / 2.0], [0.0, im_height, im_height / 2.0], [0.0, 0.0, 1.0]])
+            warning_str = 'WARNING!!! You should provide the camera calibration file, otherwise you might get bad results. Using a crude approximation!'
+            tqdm.write(warning_str)
+            _dist_coefficients = np.zeros((1, 5))
+            _camera_matrix = np.array([
+                [im_height, 0.0, im_width / 2.0],
+                [0.0, im_height, im_height / 2.0],
+                [0.0, 0.0, 1.0]
+            ])
+            # _dist_coefficients, _camera_matrix = np.zeros((1, 5)), np.array(  [[im_height, 0.0, im_width / 2.0], [0.0, im_height, im_height / 2.0], [0.0, 0.0, 1.0]])
 
         estimate_gaze(image_file_name, image, _dist_coefficients, _camera_matrix)
