@@ -17,6 +17,7 @@ class GazeEstimatorBase(ABC):
     It synchronizes these two images with the estimated head pose.
     The images are then converted in a suitable format, and a forward pass of the deep neural network
     results in the estimated gaze for this frame. The estimated gaze is then published in the (theta, phi) notation."""
+
     def __init__(self, device_id_gaze, model_files):
         if "OMP_NUM_THREADS" not in os.environ:
             os.environ["OMP_NUM_THREADS"] = "8"
@@ -49,5 +50,6 @@ class GazeEstimatorBase(ABC):
         endpoint_x, endpoint_y = get_endpoint(est_gaze[0], est_gaze[1], center_x, center_y, 50)
 
         # cv2.line(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (255, 0, 0))
-        cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (255, 0, 0))
+        cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 255, 0),
+                        tipLength=0.2)
         return output_image
