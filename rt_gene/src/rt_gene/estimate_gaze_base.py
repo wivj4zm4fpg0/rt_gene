@@ -50,6 +50,8 @@ class GazeEstimatorBase(ABC):
         endpoint_x, endpoint_y = get_endpoint(est_gaze[0], est_gaze[1], center_x, center_y, 50)
 
         # cv2.line(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (255, 0, 0))
-        cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 255, 0),
-                        tipLength=0.2)
+        # cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 255, 0),
+        #                 tipLength=0.2)
+        cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x) * 2, int(endpoint_y) * 2),
+                        (0, 255, 0), tipLength=1)
         return output_image
