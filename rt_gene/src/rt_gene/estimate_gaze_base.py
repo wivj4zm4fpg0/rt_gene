@@ -53,5 +53,5 @@ class GazeEstimatorBase(ABC):
         # cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 255, 0),
         #                 tipLength=0.2)
         cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x * 1.5), int(endpoint_y * 1.5)),
-                        (0, 255, 0), thickness=3, tipLength=0.2)
+                        (0, 255, 0), thickness=2, tipLength=0.2)
         return output_image
