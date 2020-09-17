@@ -107,8 +107,10 @@ class LandmarkMethodBase(object):
         endpoint_x, endpoint_y = gaze_tools.get_endpoint(est_headpose[1], est_headpose[0], center_x, center_y, 100)
 
         # cv2.line(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 0, 255), 3)
-        cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 0, 255),
-                        3, tipLength=0.2)
+        # cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 0, 255),
+        #                 3, tipLength=0.2)
+        cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x * 1.5), int(endpoint_y * 1.5)),
+                        (0, 0, 255), thickness=2, tipLength=0.4)
         return output_image
 
     def ddfa_forward_pass(self, color_img, roi_box_list):
