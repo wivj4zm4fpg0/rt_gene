@@ -110,7 +110,7 @@ class LandmarkMethodBase(object):
         # cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x), int(endpoint_y)), (0, 0, 255),
         #                 3, tipLength=0.2)
         cv2.arrowedLine(output_image, (int(center_x), int(center_y)), (int(endpoint_x * 1.2), int(endpoint_y * 1.2)),
-                        (0, 0, 255), thickness=2, tipLength=0.3)
+                        (0, 0, 255), thickness=2, tipLength=0.4)
         return output_image
 
     def ddfa_forward_pass(self, color_img, roi_box_list):
